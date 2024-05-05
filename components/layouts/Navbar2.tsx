@@ -57,12 +57,12 @@ const Navbar2 = () => {
                     <div className="flex flex-col gap-2">
                       <p>
                         1. Masukkan teks yang ingin Anda enkripsi atau dekripsi
-                        pada kolom "PlainText".
+                        pada kolom &quot;PlainText&quot;.
                       </p>
-                      <p>2. Masukkan kunci yang sesuai pada kolom "Key".</p>
+                      <p>2. Masukkan kunci yang sesuai pada kolom &quot;Key&quot;.</p>
                       <p>
                         3. Hasil enkripsi atau dekripsi akan ditampilkan di
-                        kolom "ChiperText".
+                        kolom &quot;ChiperText&quot;.
                       </p>
                     </div>
                   </div>
