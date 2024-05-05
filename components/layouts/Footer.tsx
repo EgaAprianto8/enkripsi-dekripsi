@@ -1,10 +1,11 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Footer = () => {
   return (
     <div className="flex flex-col border-t-2 border-gray-100 py-10">
-      <div className="flex flex-col gap-2 mb-6 px-20">
+      <div className="flex flex-col gap-2 mb-6 sm:px-20  px-4">
         <div className="flex justify-between">
           <div className="flex flex-col w-1/2">
             <h1 className="text-2xl font-bold text-black">
@@ -18,11 +19,11 @@ const Footer = () => {
               Equivalent Privacy).
             </p>
           </div>
-          <div className="flex flex-col ">
-            <h1 className="text-2xl font-semibold text-black">
+          <div className="flex flex-col items-center sm:items-start">
+            <h1 className="text-2xl font-semibold text-black text-center sm:text-start">
               Keamanan Informasi
             </h1>
-            <div className="my-auto flex-row flex gap-4">
+            <div className="my-auto flex-col sm:flex-row flex gap-4">
               <div className="relative w-[75px] h-[75px] ">
                 <Image
                   src="/image/ega.png"
@@ -39,7 +40,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="flex px-20">
+      <div className="flex sm:px-20 px-4">
       <div className="flex border-t-2 border-gray-100">
         <div className="flex justify-between">
         <div className="flex flex-col gap-4 w-1/2 mt-6">
@@ -50,13 +51,13 @@ const Footer = () => {
             sensitif secara online.
           </p>
         </div>
-        <div className="flex flex-row gap-4 font-semibold">
-            <button title="github" className="text-gray-400">
+        <div className="flex flex-row gap-4 font-semibold mt-4">
+            <Link href="https://www.linkedin.com/in/egaa-ap-b937891a5/" title="github" className="text-gray-400">
               Linkedin
-            </button>
-            <button title="github" className="text-gray-400">
+            </Link>
+            <Link href="https://github.com/EgaAprianto8" title="github" className="text-gray-400">
               GitHub
-            </button>
+            </Link>
           </div>
         </div>
       </div>
