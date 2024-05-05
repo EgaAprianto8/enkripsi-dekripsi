@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
 import { Source_Code_Pro } from "next/font/google";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 const code = Source_Code_Pro({ subsets: ["latin"] });
 
 const EnkripsiDeskripsi = () => {
-  const [message, setMessage] = useState<string>("Hello, world!"); // Pesan default
-  const [key, setKey] = useState<string>("key"); // Kunci default
+  const [message, setMessage] = useState<string>("Hello, world!"); 
+  const [key, setKey] = useState<string>("key");
   const [result, setResult] = useState<string>("");
 
   const RC4Algorithm = () => {
+    if (!key) {
+      setResult("");
+      return; 
+    }
+
     let arrayBinary: string[] = [];
     for (let i = 0; i < message.length; i++) {
       let ascii = message.charCodeAt(i);
@@ -62,7 +66,7 @@ const EnkripsiDeskripsi = () => {
 
   useEffect(() => {
     RC4Algorithm();
-  }, [message]); // Menjalankan RC4Algorithm setiap kali message berubah
+  }, [message, key]);
 
   return (
     <main className="flex min-h-full bg-[#f2f4f6] min-w-full sm:pt-20 sm:pb-60 py-10">
@@ -74,8 +78,9 @@ const EnkripsiDeskripsi = () => {
               <Textarea
                 title="inputpesan"
                 value={message}
+                placeholder="Masukan Pesan"
                 onChange={(e) => setMessage(e.target.value)}
-                style={{ height: "200px" }} // Tinggi default text area
+                style={{ height: "200px" }} 
               />
             </div>
           </div>
@@ -88,8 +93,9 @@ const EnkripsiDeskripsi = () => {
                 id="key"
                 title="inputkey"
                 value={key}
+                placeholder="Masukan Key"
                 onChange={(e) => setKey(e.target.value)}
-                style={{ height: "200px" }} // Tinggi default text area
+                style={{ height: "200px" }} 
               />
             </div>
           </div>
@@ -101,7 +107,8 @@ const EnkripsiDeskripsi = () => {
               <Textarea
                 title="hasil"
                 value={result}
-                style={{ height: "200px" }} // Tinggi default text area
+                placeholder="Untuk menampilkan hasil, Key wajib diisi"
+                style={{ height: "200px" }}
               />
             </div>
           </div>
