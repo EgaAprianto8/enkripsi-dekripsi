@@ -71,7 +71,7 @@ const Navbar2 = () => {
                         Di sini, Anda perlu memasukkan kunci yang akan digunakan untuk enkripsi atau dekripsi. Pastikan kunci yang Anda masukkan adalah dalam format heksadesimal dengan panjang 16 byte (32 karakter).
                         </p>
                         <p>
-                        Jika Anda tidak memiliki kunci khusus, Anda dapat mengklik tombol "Generate Key" untuk menghasilkan kunci secara acak.
+                        Jika Anda tidak memiliki kunci khusus, Anda dapat mengklik tombol &quot;Generate Key&quot; untuk menghasilkan kunci secara acak.
                         </p>
                       </div>
                     </div>
@@ -94,10 +94,10 @@ const Navbar2 = () => {
                       </h1>
                       <div className="flex flex-col gap-2">
                         <p>
-                        Gunakan tombol "Enkripsi" untuk melakukan enkripsi pesan yang telah Anda masukkan dengan menggunakan kunci yang telah Anda tentukan. 
+                        Gunakan tombol &quot;Enkripsi&quot; untuk melakukan enkripsi pesan yang telah Anda masukkan dengan menggunakan kunci yang telah Anda tentukan. 
                         </p>
                         <p>
-                        Gunakan tombol "Dekripsi" untuk melakukan dekripsi pesan yang telah dienkripsi sebelumnya menggunakan kunci yang sama.
+                        Gunakan tombol &quot;Dekripsi&quot; untuk melakukan dekripsi pesan yang telah dienkripsi sebelumnya menggunakan kunci yang sama.
                         </p>
                       </div>
                     </div>
