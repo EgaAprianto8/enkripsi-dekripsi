@@ -39,7 +39,7 @@ const EnkripsiDeskripsi = () => {
         CryptoJS.enc.Hex.parse(key),
         {
           mode: CryptoJS.mode.ECB,
-          padding: CryptoJS.pad.Pkcs7
+          padding: CryptoJS.pad.Pkcs7,
         }
       ).ciphertext.toString(CryptoJS.enc.Hex);
       setResult(ciphertext);
@@ -69,7 +69,7 @@ const EnkripsiDeskripsi = () => {
         CryptoJS.enc.Hex.parse(key),
         {
           mode: CryptoJS.mode.ECB,
-          padding: CryptoJS.pad.Pkcs7
+          padding: CryptoJS.pad.Pkcs7,
         }
       );
       const originalText = bytes.toString(CryptoJS.enc.Utf8);

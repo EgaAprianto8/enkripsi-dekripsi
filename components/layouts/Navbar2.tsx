@@ -23,7 +23,7 @@ const Navbar2 = () => {
           <Link href="/" className="my-auto flex-row flex gap-4">
             <div className="relative  w-[50px] h-[50px]">
               <Image
-                src="/image/rc4.png"
+                src="/image/aes.png"
                 alt="logo"
                 fill={true}
                 className="object-cover w-[50px] h-[50px]"
