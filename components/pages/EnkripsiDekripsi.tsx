@@ -1,116 +1,165 @@
-import { useState, useEffect } from "react";
-import { Source_Code_Pro } from "next/font/google";
+import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
-
-const code = Source_Code_Pro({ subsets: ["latin"] });
+var CryptoJS = require("crypto-js");
 
 const EnkripsiDeskripsi = () => {
-  const [message, setMessage] = useState<string>("Hello, world!"); 
-  const [key, setKey] = useState<string>("key");
+  const [message, setMessage] = useState<string>("Hello, world!");
+  const [key, setKey] = useState<string>(
+    CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex)
+  );
   const [result, setResult] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
-  const RC4Algorithm = () => {
+  const validateHex = (input: string) => {
+    const hexRegex = /^[0-9A-Fa-f]+$/g;
+    return hexRegex.test(input);
+  };
+
+  const generateRandomKey = () => {
+    setKey(CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex));
+  };
+
+  const AESAlgorithm = () => {
+    setError("");
     if (!key) {
+      setError("Key harus diisi.");
       setResult("");
-      return; 
+      return;
     }
 
-    let arrayBinary: string[] = [];
-    for (let i = 0; i < message.length; i++) {
-      let ascii = message.charCodeAt(i);
-      let binary = ascii.toString(2).padStart(8, "0");
-      arrayBinary.push(binary);
+    if (!validateHex(key)) {
+      setError("Key harus dalam format heksadesimal.");
+      setResult("");
+      return;
     }
 
-    let S: number[] = [];
-    let K: number[] = [];
-    for (let i = 0; i < message.length; i++) {
-      S[i] = i;
-      K.push(key.charCodeAt(i % key.length));
+    try {
+      const ciphertext = CryptoJS.AES.encrypt(
+        message,
+        CryptoJS.enc.Hex.parse(key),
+        {
+          mode: CryptoJS.mode.ECB,
+          padding: CryptoJS.pad.Pkcs7
+        }
+      ).ciphertext.toString(CryptoJS.enc.Hex);
+      setResult(ciphertext);
+    } catch (error) {
+      setError("Terjadi kesalahan saat melakukan enkripsi.");
+      setResult("");
     }
-
-    let j = 0;
-    for (let i = 0; i < message.length; i++) {
-      j = (j + S[i] + K[i]) % message.length;
-      let temp = S[i];
-      S[i] = S[j];
-      S[j] = temp;
-    }
-
-    j = 0;
-    let i = 0;
-    let keyStream: string[] = [];
-    for (let n = 0; n < message.length; n++) {
-      i = (i + 1) % message.length;
-      j = (j + S[i]) % message.length;
-      let temp = S[i];
-      S[i] = S[j];
-      S[j] = temp;
-      let t = (S[i] + S[j]) % message.length;
-      keyStream[n] = S[t].toString(2).padStart(8, "0");
-    }
-
-    enkripsiDekripsi(arrayBinary, keyStream);
   };
 
-  const enkripsiDekripsi = (arrayBinary: string[], keyStream: string[]) => {
-    let hasil: string[] = [];
-    for (let i = 0; i < message.length; i++) {
-      let binaryToInt = parseInt(arrayBinary[i], 2);
-      let keyStreamToInt = parseInt(keyStream[i], 2);
-      let result = binaryToInt ^ keyStreamToInt;
-      hasil.push(String.fromCharCode(result));
+  const decryptAES = () => {
+    setError("");
+    if (!key || !result) {
+      setError("Key dan ChiperText harus diisi.");
+      setResult("");
+      return;
     }
-    setResult(hasil.join(""));
+
+    if (!validateHex(key)) {
+      setError("Key harus dalam format heksadesimal.");
+      setResult("");
+      return;
+    }
+
+    try {
+      const bytes = CryptoJS.AES.decrypt(
+        { ciphertext: CryptoJS.enc.Hex.parse(result) },
+        CryptoJS.enc.Hex.parse(key),
+        {
+          mode: CryptoJS.mode.ECB,
+          padding: CryptoJS.pad.Pkcs7
+        }
+      );
+      const originalText = bytes.toString(CryptoJS.enc.Utf8);
+      setResult(originalText);
+    } catch (error) {
+      setError("Terjadi kesalahan saat melakukan dekripsi.");
+      setResult("");
+    }
   };
 
-  useEffect(() => {
-    RC4Algorithm();
-  }, [message, key]);
+  const handleEncrypt = () => {
+    AESAlgorithm();
+  };
+
+  const handleDecrypt = () => {
+    decryptAES();
+  };
 
   return (
     <main className="flex min-h-full bg-[#f2f4f6] min-w-full sm:pt-20 sm:pb-60 py-10">
-      <div className="flex md:flex-row flex-col container justify-center gap-14">
-        <div className="border-2 border-gray-100 rounded-sm min-w-full sm:min-w-[500px] bg-white">
-          <h1 className="text-blue-400 text-2xl font-semibold p-4">PlainText</h1>
-          <div className={code.className}>
-            <div className="border-t-2">
-              <Textarea
-                title="inputpesan"
-                value={message}
-                placeholder="Masukan Pesan"
-                onChange={(e) => setMessage(e.target.value)}
-                style={{ height: "200px" }} 
-              />
-            </div>
+      <div className="flex flex-col sm:flex-row gap-4 container mx-auto">
+        <div className="flex-1 border-2 border-gray-100 rounded-sm bg-white">
+          <h1 className="text-blue-400 text-2xl font-semibold p-4">
+            Masukkan Plaintext / ChiperText
+          </h1>
+          <div className="border-t-2">
+            <Textarea
+              title="inputpesan"
+              value={message}
+              placeholder="Masukkan pesan yang ingin dienkripsi/dekripsi"
+              onChange={(e) => setMessage(e.target.value)}
+              style={{ height: "200px" }}
+            />
           </div>
         </div>
-        <div className="border-2 border-gray-100 rounded-sm min-w-full sm:min-w-[500px] bg-white">
+        <div className="flex-1 border-2 border-gray-100 rounded-sm bg-white">
           <h1 className="text-blue-400 text-2xl font-semibold p-4">Key</h1>
-          <div className={code.className}>
-            <div className="border-t-2">
-              <Textarea
-                id="key"
-                title="inputkey"
-                value={key}
-                placeholder="Masukan Key"
-                onChange={(e) => setKey(e.target.value)}
-                style={{ height: "200px" }} 
-              />
-            </div>
+          <div className="border-t-2">
+            <Textarea
+              id="key"
+              title="inputkey"
+              value={key}
+              placeholder="Masukkan Key dalam format 16 byte heksadesimal"
+              onChange={(e) => {
+                setKey(e.target.value);
+                if (!validateHex(e.target.value)) {
+                  setError("Key harus dalam format heksadesimal.");
+                } else {
+                  setError("");
+                }
+              }}
+              style={{ height: "200px" }}
+            />
           </div>
+          <div className="flex justify-center pb-10">
+            <button
+              title="generatekey"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={generateRandomKey}
+            >
+              Generate Key
+            </button>
+          </div>
+          {error && <p className="text-red-500 mt-2">{error}</p>}
         </div>
-        <div className="border-2 border-gray-100 rounded-sm min-w-full sm:min-w-[500px] bg-white">
-          <h1 className="text-blue-400 text-2xl font-semibold p-4">ChiperText</h1>
-          <div className={code.className}>
-            <div className="border-t-2">
-              <Textarea
-                title="hasil"
-                value={result}
-                placeholder="Untuk menampilkan hasil, Key wajib diisi"
-                style={{ height: "200px" }}
-              />
-            </div>
+        <div className="flex-1 border-2 border-gray-100 rounded-sm bg-white">
+          <h1 className="text-blue-400 text-2xl font-semibold p-4">
+            Hasil Enkripsi / Dekripsi{" "}
+          </h1>
+          <div className="border-t-2">
+            <Textarea
+              title="hasil"
+              value={result}
+              placeholder="Hasil enkripsi/dekripsi akan ditampilkan di sini"
+              style={{ height: "200px" }}
+            />
+          </div>
+          <div className="flex justify-center mt-4">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleEncrypt}
+            >
+              Enkripsi
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4"
+              onClick={handleDecrypt}
+            >
+              Dekripsi
+            </button>
           </div>
         </div>
       </div>
